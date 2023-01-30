@@ -15,10 +15,10 @@ bool gLastKeys[MAX_KEY];
 bool gDownKeys[MAX_KEY];
 
 //タイトル画面のカーソルの位置
-vec2 gCursorPos[] = {
-	vec2(),
-	vec2()
-};
+//vec2 gCursorPos[] = {
+//	vec2(),
+//	vec2()
+//};
 
 void Display()
 {
@@ -57,8 +57,8 @@ void Display()
 
 	//背景の描画
 	gMainBG.Draw();
-	//太陽の描画
-	gSun.Draw();
+	//惑星の描画
+	gPlanet.Draw();
 
 
 	//点のサイズを設定する
@@ -85,7 +85,9 @@ void Display()
 			Color color;
 			const char* title = "SPACE WAR";
 			float stdWidth = FontGetLength(title);
-			Text2D(((float)SCREEN_WIDTH - stdWidth) / 2.0f + 150.0f, (float)SCREEN_HEIGHT / 4.0f,
+			//タイトルを上下に動かす
+			float moveY = 4 * sin(gGame.GetCount()/ 30.0);
+			Text2D(((float)SCREEN_WIDTH - stdWidth) / 2.0f + 150.0f, (float)SCREEN_HEIGHT / 4.0f + moveY,
 				color.White, sizeTitle, sizeTitle.x / 16.0f, title);
 		}
 
@@ -93,20 +95,42 @@ void Display()
 		//1P
 		{
 			vec2 size1PText = vec2(20, 20);
-			const char* Text1P = "1P PRESS [W] ";
+			const char* Text1P = "VS CPU PRESS [W] ";
 			Color color;
 			float stdWidth = FontGetLength(Text1P);
-			Text2D(((float)SCREEN_WIDTH - stdWidth) / 2.0f + 80.0f, (float)-SCREEN_HEIGHT / 4.0f + 400,
+			Text2D(((float)SCREEN_WIDTH - stdWidth) / 2.0f + 104.0f, (float)-SCREEN_HEIGHT / 4.0f + 400,
 				color.White, size1PText, size1PText.x / 20.0f, Text1P);
 		}
 		//2P
 		{
-			vec2 size1PText = vec2(20, 20);
-			const char* Text1P = "2P PRESS [S] ";
+			vec2 size2PText = vec2(20, 20);
+			const char* Text2P = "VS 2P  PRESS [S] ";
 			Color color;
-			float stdWidth = FontGetLength(Text1P);
+			float stdWidth = FontGetLength(Text2P);
 			Text2D(((float)SCREEN_WIDTH - stdWidth) / 2.0f + 1.0f, (float)-SCREEN_HEIGHT / 4.0f + 430,
-				color.White, size1PText, size1PText.x / 20.0f, Text1P);
+				color.White, size2PText, size2PText.x / 20.0f, Text2P);
+		}
+
+		//勝利時のテキストの表示
+		{
+			if (gShips[SHIP_INDEX_WEDGE].GetScore() == MAX_SHIP_SCORE)
+			{
+				vec2 size1PText = vec2(30, 30);
+				const char* Text1P = "1P WIN ! ";
+				Color color;
+				float stdWidth = FontGetLength(Text1P);
+				Text2D(((float)SCREEN_WIDTH - stdWidth) / 2.0f , SCREEN_HEIGHT / 2.0f,
+					color.Red, size1PText, size1PText.x / 20.0f, Text1P);
+			}//if (gShips[SHIP_INDEX_WEDGE].GetScore() == MAX_SHIP_SCORE)
+			else if (gShips[SHIP_INDEX_NEEDLE].GetScore() == MAX_SHIP_SCORE)
+			{
+				vec2 size2PText = vec2(30, 30);
+				const char* Text2P = "2P WIN ! ";
+				Color color;
+				float stdWidth = FontGetLength(Text2P);
+				Text2D(((float)SCREEN_WIDTH - stdWidth) / 2.0f, SCREEN_HEIGHT / 2.0f,
+					color.Red, size2PText, size2PText.x / 20.0f, Text2P);
+			}//else if (gShips[SHIP_INDEX_NEEDLE].GetScore() == MAX_SHIP_SCORE)
 		}
 
 

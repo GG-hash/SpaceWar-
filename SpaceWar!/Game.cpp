@@ -1,7 +1,7 @@
 #include "Game.h"
 #include"Ship.h"
 #include"Audio.h"
-//ゲーム自体を管理する配列
+//ゲームの状態を管理するグローバル変数
 Game gGame = {};
 
 Game::Game() :_demoSceen(true)
@@ -127,6 +127,9 @@ void Game::GameReset()
 			{
 				AudioStop(i);
 			}//for (int i = 0; i < AUDIO_CHANNEL_MAX; i++)
+
+
+
 		}//if (gShips[i].GetScore() >= MAX_SHIP_SCORE)
 
 	}//for (int i = 0; i < ShipType::MAX_SHIP; i++)

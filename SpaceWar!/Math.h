@@ -8,7 +8,7 @@
 using namespace glm;
 
 //angle‚ð -M_PI < angle < M_PI ‚Ö‚ÆC³‚·‚é
-static float FixRadianAngle(float angle);
+float FixRadianAngle(float angle);
 
 
 

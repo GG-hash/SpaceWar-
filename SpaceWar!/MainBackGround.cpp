@@ -53,6 +53,8 @@ void MainBackGround::Draw()
 	LIGHT light = { {0.0, 0.0,1.0},{1.0,1.0,1.0} };
 	CircleWithShading(200.0, center, 200.0, light);
 
+
+
 }//void MainBackGround::Draw()
 
 

@@ -49,13 +49,15 @@ void FontBegin()
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
-}
+}//void FontBegin()
+
 
 void FontEnd()
 {
 	glPopMatrix();
 	glPopAttrib();//全ての描画属性を元に戻す
-}
+}//void FontEnd()
+
 
 //void FontSetFont(int font)
 //{
@@ -74,23 +76,27 @@ void FontEnd()
 void FontSetPosition(float x, float y)
 {
 	FontSetPosition(vec2(x, y));
-}
+}//void FontSetPosition(float x, float y)
+
 
 void FontSetPosition(vec2 const& pos)
 {
 	_originPos = _pos = pos;
-}
+}//void FontSetPosition(vec2 const& pos)
+
 
 
 float FontGetSize()
 {
 	return _size;
-}
+}//float FontGetSize()
+
 
 vec2 FontGetXYSize()
 {
 	return _sizeXY;
-}
+}//vec2 FontGetXYSize()
+
 
 //float FontGetSize()
 //{
@@ -100,17 +106,20 @@ vec2 FontGetXYSize()
 void FontSetSize(float size)
 {
 	_size = size;
-}
+}//void FontSetSize(float size)
+
 
 void FontSetXYSize(vec2 const& sizeXY)
 {
 	_sizeXY = sizeXY;
-}
+}//void FontSetXYSize(vec2 const& sizeXY)
+
 
 void FontSetXYSize(float width, float height)
 {
 	FontSetXYSize(vec2(width, height));
-}
+}//void FontSetXYSize(float width, float height)
+
 
 float FontGetThicknessMin()
 {
@@ -119,7 +128,8 @@ float FontGetThicknessMin()
 	glGetFloatv(GL_LINE_WIDTH_RANGE, thickness);
 	//一番小さいフォントの太さを返す
 	return thickness[0]; // return 0.5
-}
+}//float FontGetThicknessMin()
+
 
 float FontGetThicknessMax()
 {
@@ -129,41 +139,48 @@ float FontGetThicknessMax()
 	//一番大きいフォントの太さを返す
 	//return thickness[1];//
 	return 10.0;
-}
+}//float FontGetThicknessMax()
+
 
 float FontGetThickness(int charactor)
 {
 	return glutStrokeWidth(FONT, charactor) * _sizeXY.x / FONT_DEFAULT_THICKNESS;
-}
+}//float FontGetThickness(int charactor)
+
 
 float FontGetLength(const unsigned char* str)
 {
 	return glutStrokeLength(FONT, str) * _sizeXY.x / FONT_DEFAULT_THICKNESS;
-}
+}//float FontGetLength(const unsigned char* str)
+
 
 float FontGetLength(const char* str)
 {
 	return FontGetLength((unsigned char*)str);
-}
+}//float FontGetLength(const char* str)
+
 
 void FontSetThickness(float thickness)
 {
 	_thickness = thickness;
-}
+}//void FontSetThickness(float thickness)
+
 
 void FontColor(unsigned char r, unsigned char g, unsigned char b)
 {
 	_color[0] = r;
 	_color[1] = g;
 	_color[2] = b;
-}
+}//void FontColor(unsigned char r, unsigned char g, unsigned char b)
+
 
 void FontColor(unsigned char* color)
 {
 	_color[0] = color[0];
 	_color[1] = color[1];
 	_color[2] = color[2];
-}
+}//void FontColor(unsigned char* color)
+
 
 void FontDraw(const char* charactor, ...)
 {
@@ -208,7 +225,8 @@ void FontDraw(const char* charactor, ...)
 	}
 
 
-}
+}//void FontDraw(const char* charactor, ...)
+
 
 //Text2D(float X座標, float Y座標, unsigned char* 色, float 文字のサイズ, const char* 文字列, ...)
 void Text2D(float posX, float posY, unsigned char* color, vec2 sizeXY, const char* charactor, ...)
@@ -295,7 +313,8 @@ void Text2D(float posX, float posY, unsigned char* color, vec2 sizeXY, const cha
 	FontDraw("angle : %f", angle);
 
 	FontEnd();*/
-}
+}//void Text2D(float posX, float posY, unsigned char* color, vec2 sizeXY, const char* charactor, ...)
+
 
 void Text2D(float posX, float posY, unsigned char* color, vec2 sizeXY, float thickness, const char* charactor, ...)
 {
@@ -353,8 +372,6 @@ void Text2D(float posX, float posY, unsigned char* color, vec2 sizeXY, float thi
 	char* ptr = str;
 	for (; (*ptr != '\0') && (*ptr != '\n'); ptr++)
 	{
-
-
 		glPushMatrix();
 		glTranslatef(_pos.x, _pos.y + _sizeXY.y, 0);
 		//float s = _size / FONT_DEFAULT_SIZE;
@@ -376,7 +393,8 @@ void Text2D(float posX, float posY, unsigned char* color, vec2 sizeXY, float thi
 	glPopMatrix();
 	glPopAttrib();//全ての描画属性を元に戻す
 
-}
+}//void Text2D(float posX, float posY, unsigned char* color, vec2 sizeXY, float thickness, const char* charactor, ...)
+
 
 
 //Text2D(float X座標, float Y座標, unsigned char* 色, float 文字の太さ, const char* 文字列, ...)
@@ -456,7 +474,8 @@ void Text2D(float posX, float posY, unsigned char* color, float thickness, const
 	//文字の描画終了
 	glPopMatrix();
 	glPopAttrib();//全ての描画属性を元に戻す
-}
+}//void Text2D(float posX, float posY, unsigned char* color, float thickness, const char* charactor, ...)
+
 
 void Text2D(float posX, float posY, unsigned char* color, const char* charactor, ...)
 {
@@ -535,7 +554,8 @@ void Text2D(float posX, float posY, unsigned char* color, const char* charactor,
 	//文字の描画終了
 	glPopMatrix();
 	glPopAttrib();//全ての描画属性を元に戻す
-}
+}//void Text2D(float posX, float posY, unsigned char* color, const char* charactor, ...)
+
 
 //Text2D(float X座標, float Y座標, float 文字のサイズ, const char* 文字列, ...)
 void Text2D(float posX, float posY, vec2 sizeXY, const char* charactor, ...)
@@ -613,7 +633,8 @@ void Text2D(float posX, float posY, vec2 sizeXY, const char* charactor, ...)
 	//文字の描画終了
 	glPopMatrix();
 	glPopAttrib();//全ての描画属性を元に戻す
-}
+}//void Text2D(float posX, float posY, vec2 sizeXY, const char* charactor, ...)
+
 
 //Text2D(float X座標, float Y座標,const char* 文字列, ...)
 void Text2D(float posX, float posY, const char* charactor, ...)
@@ -690,4 +711,5 @@ void Text2D(float posX, float posY, const char* charactor, ...)
 	//文字の描画終了
 	glPopMatrix();
 	glPopAttrib();//全ての描画属性を元に戻す
-}
+}//void Text2D(float posX, float posY, const char* charactor, ...)
+

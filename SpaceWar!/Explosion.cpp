@@ -4,6 +4,7 @@
 #include"GameHeader.h"
 #include"glut.h"
 #include"Bullet.h"
+#include"Color.h"
 
 //Explosionのデータを管理する配列
 vector<Explosion> gExplosions;
@@ -59,8 +60,11 @@ void Explosion::AllDraw()
 	}
 	vec2& position = gExplosions.data()->GetPosition();
 
+	Colorub color;
+	glColor3ubv(color.Dark_Pink);
 	glVertexPointer(2, GL_FLOAT, sizeof(Explosion), &position);
 	glDrawArrays(GL_POINTS, 0, gExplosions.size());
+	glColor3ubv(color.White);
 }
 //void Explosion::AllDraw()
 

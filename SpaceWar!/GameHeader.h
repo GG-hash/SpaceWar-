@@ -7,7 +7,7 @@
 #include"Explosion.h"
 #include"Game.h"
 #include"MainBackGround.h"
-#include"Sun.h"
+#include"Planet.h"
 
 
 //キーボードの入力を保存するする配列

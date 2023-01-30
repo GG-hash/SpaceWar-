@@ -17,7 +17,7 @@ using namespace glm;
 //Shipの最大の加速度
 #define SHIP_ACCELERATION 0.001f
 //Shipが得ることのできる最大のスコア
-#define MAX_SHIP_SCORE 5
+#define MAX_SHIP_SCORE 3
 
 
 //Shipの数を定義する

@@ -16,10 +16,10 @@ private:
 	float _toEnemyAngle;
 	//“G‚Ö‚Ì‘Š‘ÎŠp“x
 	float _toRelativeEnemyAngle;
-	//‘¾—z‚©‚ç‚ÌŠp“x
-	float _fromSunAngle;
-	//‘¾—z‚Ö‚ÌŠp“x
-	float _toSunAngle;
+	//˜f¯‚©‚ç‚ÌŠp“x
+	float _fromPlanetAngle;
+	//˜f¯‚Ö‚ÌŠp“x
+	float _toPlanetAngle;
 
 public:
 	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^

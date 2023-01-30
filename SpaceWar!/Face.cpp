@@ -160,8 +160,10 @@ void CircleWithShading(double radius, POINT3D center, double viewpoint, LIGHT li
 	{
 		for (int j = -SCREEN_HEIGHT / 2; j < SCREEN_HEIGHT; j++)
 		{
+			//‰æ–Êã‚Ì“_
 			double xs = (double)j;
 			double ys = (double)i;
+			//”»•ÊŽ®‚ð‰ð‚­€”õ
 			double A = xs * xs + ys * ys + zv * zv;
 			double B = -(xs * Xc + ys * Yc - zv * Zc + zv * zv);
 			double C = Xc * Xc + Yc * Yc + (Zc - zv) * (Zc - zv) - radius * radius;

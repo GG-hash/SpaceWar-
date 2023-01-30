@@ -29,8 +29,6 @@ int AudioInit()
 	//現在のコンテキストを設定
 	alcMakeContextCurrent(context);
 
-
-
 	//波形データを管理するバッファーの作成
 	alGenBuffers(AUDIO_WAVEFORM_MAX, buffersID);//glGenBuffers(バッファーを作成する数, バッファーのポインタ);
 
@@ -246,12 +244,10 @@ void AudioSweep(int channel, float sweep, float freqEnd)
 
 void AudioFreq(int channel, float freq)
 {
-	//_channels[channel]._freq
-	//printf("AudioFreq : %f\n", freq);
 	_channels[channel]._freqStart = _channels[channel]._freq = freq;
 	//ピッチを設定する float型
 	//再生中でもピッチを変更できるようにする
-	alSourcef(_channels[channel].sourceID, AL_PITCH, _channels[channel]._freq);//_freq?
+	alSourcef(_channels[channel].sourceID, AL_PITCH, _channels[channel]._freq);
 }
 //AudioFreq(int channel, float freq)
 
@@ -273,17 +269,17 @@ void AudioFreq(int channel, float freq)
 float AudioIndexToFreq(int index)
 {
 	//除数の表
-	int divisorTable[] =
+	/*int divisorTable[] =
 	{
 		4,8,16,32,64,96,128,160,202,254,380,508,762,1016,2034,4068
-	};
-
-	/*float divisorTable[16] =
-	{
-		4.0f,8.0f,16.0f,32.0f,64.0f,96.0f,128.0f,160.0f,202.0f,254.0f,380.0f,508.0f,762.0f,1016.0f,2034.0f,4068.0f
 	};*/
 
-	//printf("Freq      : %f\n ", 1789772.5f / divisorTable[index]);
+	float divisorTable[16] =
+	{
+		4.0f,8.0f,16.0f,32.0f,64.0f,96.0f,128.0f,160.0f,202.0f,254.0f,380.0f,508.0f,762.0f,1016.0f,2034.0f,4068.0f
+	};
+
+	
 	//1789772.5f はファミコンのCPUクロック周波数
 	return 1789772.5f / divisorTable[index];
 }//AudioIndexToFreq(int index)

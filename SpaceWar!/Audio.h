@@ -7,11 +7,13 @@
 //ライブラリのインポート
 #pragma comment(lib,"OpenAL32.lib")
 
+//基準となる音の大きさ
 #define AUDIO_DEFAULT_GAIN 0.1f
+//基準となる周波数
 #define AUDIO_DEFAULT_FREQ 440.0f
 
 //音のモード定義
-enum
+enum SoundMode
 {
 	AUDIO_WAVEFORM_PULSE_12_5, //矩形波
 	AUDIO_WAVEFORM_PULSE_25,
@@ -21,51 +23,24 @@ enum
 	AUDIO_WAVEFORM_NOISE_LONG, //長周期ノイズ
 	AUDIO_WAVEFORM_NOISE_SHORT,//短周期ノイズ
 	AUDIO_WAVEFORM_MAX
-};
+};//enum SoundMode
 
 //チャンネル
-enum
+enum SoundChannel
 {
 	AUDIO_CHANNEL_PULSE0,
 	AUDIO_CHANNEL_PULSE1,
 	AUDIO_CHANNEL_TRIANGLE,
 	AUDIO_CHANNEL_NOISE,
 	AUDIO_CHANNEL_MAX
-};
+};//enum SoundChannel
+
 
 
 //ノイズ周波数除数 値が大きいほど低い音となる  4068は地響きのような音
 //4,8,16,32,64,96,128,160,(202),254,380,508,762,1016,2034,4068
 //AudioFreq(1789772.5f/202);//平均的な周波数
-//
-////ソースのID 外部からアクセスできるようにする
-//static ALuint sourceID;
-//
-////波の形の保存
-//static int _waveform;
-//
-////音の長さ
-//static unsigned int _length;
-////音の成り始める最初の時刻
-//static unsigned int _startTime;
-////減衰の長さ
-//static float _decay;
-////ゲインの長さ
-//static float _gain;
-////スイープの長さ
-//static float _sweep;
-////ピッチ
-////static float _pitch;
-////ピッチの範囲
-////static float _pitchTarget;
-////スウィープの範囲
-//static float _sweepTarget;
-////最初の周波数
-//static float _freqStart = DEFAULT_FREQ;
-////現在の周波数
-//static float _freq;//ファミコンのCPUクロック数は 1789772.5f
-////最後の周波数
-//static float _freqEnd;
+
 
 typedef struct
 {

@@ -5,6 +5,8 @@
 //Shipのインスタンス
 class Ship gShips[MAX_INDEX_SHIP];
 
+//回転する上で鉛直方向を0°として考える
+
 Ship::Ship() :_index(0)
 , _isDead(false)
 , _transPoints()
@@ -128,8 +130,14 @@ int Ship::Initialize(const char* fileName, int index, vec2 defaultPos, float def
         {
             unsigned char buffer[3];
             fread(buffer, sizeof buffer, 1, fp);
+            /*
+            buffer[0] : B
+            buffer[1] : G
+            buffer[2] : R
+            */
 
-            //緑でなければ点を追加
+
+            //緑(0x00,0xff,0x00)でなければ点を追加
             if (buffer[0] > 0)
             {
                 _points.push_back(vec2(j, i));
@@ -162,9 +170,6 @@ int Ship::AllInitialize()
     gShips[SHIP_INDEX_NEEDLE].Initialize("image/needle.bmp", SHIP_INDEX_NEEDLE,
         vec2(SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 4.0f), (float)M_PI);
     gShips[SHIP_INDEX_NEEDLE]._bulletCount = 0;
-
-
-
 
     return 0;
 }
@@ -218,8 +223,8 @@ void Ship::Attack()
         //攻撃音を生成
         int channel = AUDIO_CHANNEL_PULSE0 + _index;
         AudioStop(channel);
-        AudioWaveForm(channel, AUDIO_WAVEFORM_PULSE_12_5);
-        AudioFreq(channel, 440 * 4);
+        AudioWaveForm(channel, AUDIO_WAVEFORM_PULSE_25);
+        AudioFreq(channel, 440 * 5);
         AudioGain(channel, AUDIO_DEFAULT_GAIN);
         AudioSweep(channel, 0.9f);
         AudioDecay(channel, 0.9f);
@@ -287,7 +292,6 @@ void Ship::Update()
     //加速する時の処理
     if (_keys[SHIP_KEY_ACCEL])
     {
-        //_accel = acceleration;
         //Shipの回転させる
         _speed += vec2(-sin(_rotate), cos(_rotate)) * SHIP_ACCELERATION;
     }
@@ -324,8 +328,8 @@ void Ship::Update()
     //座標のアップデート
     _pos += _speed;
 
-    //太陽による引力(太陽の概要は Sun.hを参照してください)
-    //太陽の位置は原点にある
+    //惑星による引力(惑星の概要は Planet.hを参照してください)
+    //惑星の位置は原点にある
     if (length(_pos) != 0.0f)
     {
         _speed += -normalize(_pos) / length(_pos) * 0.15f;
@@ -373,8 +377,6 @@ void Ship::Update()
             if (Enemy._isDead == false)
             {
 
-
-
                 for (auto enemy = Enemy._transPoints.begin();
                     enemy != Enemy._transPoints.end(); enemy++)
                 {
@@ -406,15 +408,15 @@ void Ship::Update()
         }//else
     }//for (auto bullet = _bullets.begin(); bullet != _bullets.end();)
 
-    //太陽にぶつかった時の処理
+    //惑星にぶつかった時の処理
     for (auto transPoints = _transPoints.begin();
         transPoints != _transPoints.end(); transPoints++)
     {
-        //進んだ先が太陽であり、デモ画面で無かったら音を鳴らす
+        //進んだ先が惑星であり、デモ画面で無かったら音を鳴らす
         if (length(*transPoints) < length(_speed) &&
             (gGame._demoSceen == false))
         {
-            //太陽の音を生成
+            //惑星の音を生成
             int channel = AUDIO_CHANNEL_TRIANGLE + _index;
             AudioStop(channel);
             AudioWaveForm(channel, AUDIO_WAVEFORM_NOISE_SHORT);
@@ -531,10 +533,11 @@ void Ship::Draw()
     {
         vec2& position = _bullets.data()->GetPosition();
 
+        Colorub color;
+        glColor3ubv(color.LightBlue);
         glVertexPointer(2, GL_FLOAT, sizeof(Bullet), &position);
         glDrawArrays(GL_POINTS, 0, _bullets.size());
-        //printf("Ship    x : %f, y : %f\n", _pos.x, _pos.y);
-        //printf("Bullet     x : %f, y : %f\n", position.x, position.y);
+        glColor3ubv(color.White);
     }
 
 
@@ -557,10 +560,12 @@ void Ship::Draw()
             v[i] = (vec2)(_transMatrix * vec4(v[i].x, v[i].y, 0, 1));
         }
 
+        Colorub color;
+        glColor3ubv(color.Dark_Pink);
         glVertexPointer(2, GL_FLOAT, 0, v);
-
         glDrawArrays(GL_LINES, 0, 2);
-    }//if (_accel)
+        glColor3ubv(color.White);
+    }//if (_keys[SHIP_KEY_ACCEL] == true)
 
     //頂点データによる描画をリセットする
     glDisableClientState(GL_VERTEX_ARRAY);

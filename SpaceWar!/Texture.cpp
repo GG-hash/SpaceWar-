@@ -21,16 +21,16 @@ int TextureFromBMP(const char* fileName, unsigned char* colorKey)
 	printf("%s has been successfully loaded.\n", fileName);
 
 	//ヘッダーのデータを格納する
-	BITMAPFILEHEADER bitFile;
-	fread(&bitFile, sizeof BITMAPFILEHEADER, 1, file);
+	BITMAPFILEHEADER fHeader;
+	fread(&fHeader, sizeof BITMAPFILEHEADER, 1, file);
 	//画像サイズの表示
-	//printf("BITMAPFILEHEADER : %d\n", bitFile.bfSize);
+	//printf("BITMAPFILEHEADER : %d\n", fHeader.bfSize);
 
-	BITMAPINFOHEADER bitInfo;
-	fread(&bitInfo, sizeof BITMAPINFOHEADER, 1, file);
-	printf("bitInfo Width : %d bitInfo Height : %d\n", bitInfo.biWidth, bitInfo.biHeight);
+	BITMAPINFOHEADER iHeader;
+	fread(&iHeader, sizeof BITMAPINFOHEADER, 1, file);
+	printf("iHeader Width : %d iHeader Height : %d\n", iHeader.biWidth, iHeader.biHeight);
 	//1pixleあたり何ビットか
-	printf("BitCount : %d\n", bitInfo.biBitCount);
+	printf("BitCount : %d\n", iHeader.biBitCount);
 
 
 	//ピクセルデータの読み込み
@@ -41,19 +41,19 @@ int TextureFromBMP(const char* fileName, unsigned char* colorKey)
 	}RGBA;
 
 	//ピクセルの作成　メモリの確保
-	RGBA* pixels = (RGBA*)malloc(sizeof(RGBA) * bitInfo.biWidth * bitInfo.biHeight);
+	RGBA* pixels = (RGBA*)malloc(sizeof(RGBA) * iHeader.biWidth * iHeader.biHeight);
 	if (pixels == nullptr)
 	{
 		return -1;
 	}
-	printf("OK\n");
+
 	//パディング:
-	int padding = (4 - bitInfo.biWidth * (bitInfo.biBitCount / 8) % 4) % 4;
-	for (int y = 0; y < bitInfo.biHeight; y++)
+	int padding = (4 - iHeader.biWidth * (iHeader.biBitCount / 8) % 4) % 4;
+	for (int y = 0; y < iHeader.biHeight; y++)
 	{
-		for (int x = 0; x < bitInfo.biWidth; x++)
+		for (int x = 0; x < iHeader.biWidth; x++)
 		{
-			RGBA* tmpPix = &pixels[y * bitInfo.biWidth + x];
+			RGBA* tmpPix = &pixels[y * iHeader.biWidth + x];
 			//printf("OK\n");
 			fread(tmpPix, 3, 1, file);
 			//printf("fread OK\n");
@@ -62,43 +62,43 @@ int TextureFromBMP(const char* fileName, unsigned char* colorKey)
 				(tmpPix->g == colorKey[1]) &&
 				(tmpPix->b == colorKey[2])) ? 0x00 : 0xff;
 			//printf("alpha OK\n");
-		}
+		}//for (int x = 0; x < iHeader.biWidth; x++)
 		fseek(file, padding, SEEK_CUR);
-	}
+	}//for (int y = 0; y < iHeader.biHeight; y++)
 
 
 	//BMPファイルはRGBAでなくBGRで保存されている為、RGBAに修正する
-	for (int y = 0; y < bitInfo.biHeight; y++)
+	for (int y = 0; y < iHeader.biHeight; y++)
 	{
-		for (int x = 0; x < bitInfo.biWidth; x++)
+		for (int x = 0; x < iHeader.biWidth; x++)
 		{
 			//修正するピクセルのアドレス
-			RGBA* pPixel = &pixels[y * bitInfo.biWidth + x];
+			RGBA* pPixel = &pixels[y * iHeader.biWidth + x];
 			unsigned char tmp = pPixel->r;
 			pPixel->r = pPixel->b;
 			pPixel->b = tmp;
-		}
-	}
+		}//for (int x = 0; x < iHeader.biWidth; x++)
+	}//for (int y = 0; y < iHeader.biHeight; y++)
 
 	//画像の上下反転を修正する 画像の中心より上の画像と下の画像を入れ替えることで修正する
-	for (int y = 0; y < bitInfo.biHeight / 2; y++)
+	for (int y = 0; y < iHeader.biHeight / 2; y++)
 	{
-		for (int x = 0; x < bitInfo.biWidth; x++)
+		for (int x = 0; x < iHeader.biWidth; x++)
 		{
 			//修正するピクセルのアドレス
 			//上のピクセル
-			RGBA* modPixUp = &pixels[y * bitInfo.biWidth + x];
+			RGBA* modPixUp = &pixels[y * iHeader.biWidth + x];
 			//下のピクセル
-			RGBA* modPixDown = &pixels[(bitInfo.biHeight - 1 - y) * bitInfo.biWidth + x];
+			RGBA* modPixDown = &pixels[(iHeader.biHeight - 1 - y) * iHeader.biWidth + x];
 
 			RGBA tmp = *modPixUp;
 			*modPixUp = *modPixDown;
 			*modPixDown = tmp;
 
-		}
-	}
+		}//for (int x = 0; x < iHeader.biWidth; x++)
+	}//for (int y = 0; y < iHeader.biHeight / 2; y++)
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitInfo.biWidth, bitInfo.biHeight,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iHeader.biWidth, iHeader.biHeight,
 		0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
 	//拡大時のフィルタの設定
@@ -152,7 +152,7 @@ void TexFromFile(const char* fileName, int texNo)
 	fread(&tex[texNo].bf, sizeof BITMAPFILEHEADER, 1, file);
 	fread(&tex[texNo].bi, sizeof BITMAPINFOHEADER, 1, file);
 
-	printf("bitInfo Width : %d bitInfo Height : %d\n", tex[texNo].bi.biWidth, tex[texNo].bi.biHeight);
+	printf("iHeader Width : %d iHeader Height : %d\n", tex[texNo].bi.biWidth, tex[texNo].bi.biHeight);
 	//1pixleあたり何ビットか
 	printf("BitCount : %d\n", tex[texNo].bi.biBitCount);
 
@@ -226,25 +226,25 @@ int TextureAlphaFromBMP(const char* fileName, unsigned char* buffer)
 	printf("%s has been successfully loaded.\n", fileName);
 
 	//ヘッダーのデータを格納する
-	BITMAPFILEHEADER bitFile;
-	fread(&bitFile, sizeof BITMAPFILEHEADER, 1, file);
+	BITMAPFILEHEADER fHeader;
+	fread(&fHeader, sizeof BITMAPFILEHEADER, 1, file);
 	//画像サイズの表示
-	//printf("BITMAPFILEHEADER : %d\n", bitFile.bfSize);
+	//printf("BITMAPFILEHEADER : %d\n", fHeader.bfSize);
 
-	BITMAPINFOHEADER bitInfo;
-	fread(&bitInfo, sizeof BITMAPINFOHEADER, 1, file);
-	printf("bitInfo Width : %d bitInfo Height : %d\n", bitInfo.biWidth, bitInfo.biHeight);
+	BITMAPINFOHEADER iHeader;
+	fread(&iHeader, sizeof BITMAPINFOHEADER, 1, file);
+	printf("iHeader Width : %d iHeader Height : %d\n", iHeader.biWidth, iHeader.biHeight);
 	//1pixleあたり何ビットか
-	printf("BitCount : %d\n", bitInfo.biBitCount);
+	printf("BitCount : %d\n", iHeader.biBitCount);
 
 	//パディング:
-	int padding = (4 - bitInfo.biWidth * (bitInfo.biBitCount / 8) % 4) % 4;
+	int padding = (4 - iHeader.biWidth * (iHeader.biBitCount / 8) % 4) % 4;
 
-	for (int i = 0; i < bitInfo.biHeight; i++)
+	for (int i = 0; i < iHeader.biHeight; i++)
 	{
-		for (int j = 0; j < bitInfo.biWidth; j++)
+		for (int j = 0; j < iHeader.biWidth; j++)
 		{
-			fread(&buffer[i * bitInfo.biWidth + j], 1, 1, file);
+			fread(&buffer[i * iHeader.biWidth + j], 1, 1, file);
 			//2バイト読み飛ばす
 			fseek(file, 2, SEEK_CUR);
 		}
@@ -253,29 +253,29 @@ int TextureAlphaFromBMP(const char* fileName, unsigned char* buffer)
 	}
 
 	//画像の上下反転を修正する 画像の中心より上の画像と下の画像を入れ替えることで修正する
-	for (int y = 0; y < bitInfo.biHeight / 2; y++)
+	for (int y = 0; y < iHeader.biHeight / 2; y++)
 	{
-		for (int x = 0; x < bitInfo.biWidth; x++)
+		for (int x = 0; x < iHeader.biWidth; x++)
 		{
 			//修正するピクセルのアドレス
 			//上のピクセル
-			unsigned char* modPixUp = &buffer[y * bitInfo.biWidth + x];
+			unsigned char* modPixUp = &buffer[y * iHeader.biWidth + x];
 			//下のピクセル
-			unsigned char* modPixDown = &buffer[(bitInfo.biHeight - 1 - y) * bitInfo.biWidth + x];
+			unsigned char* modPixDown = &buffer[(iHeader.biHeight - 1 - y) * iHeader.biWidth + x];
 
 			unsigned char tmp = *modPixUp;
 			*modPixUp = *modPixDown;
 			*modPixDown = tmp;
 
-		}//for (int x = 0; x < bitInfo.biWidth; x++)
-	}//for (int y = 0; y < bitInfo.biHeight / 2; y++)
+		}//for (int x = 0; x < iHeader.biWidth; x++)
+	}//for (int y = 0; y < iHeader.biHeight / 2; y++)
 
 	//ピクセルのアライメント調整
 	//メモリのサイズを1単位にする デフォルトは4単位
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	//転送
-	/*glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, bitInfo.biWidth, bitInfo.biHeight,
+	/*glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, iHeader.biWidth, iHeader.biHeight,
 		0, GL_ALPHA, GL_UNSIGNED_BYTE, buffer);*/
 
 		//拡大時のフィルタの設定

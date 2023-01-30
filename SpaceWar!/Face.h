@@ -196,7 +196,7 @@ void DrawFace(FACE face, float r, float g, float b);
 //}
 //
 
-//‰A‰e‚ğ‚Â‰~‚ğ•`‰æ‚·‚éŠÖ”
+//ƒVƒF[ƒfƒBƒ“ƒO‚³‚ê‚½‹…‚ğ•`‰æ‚·‚éŠÖ”
 //”wŒi‚Ì˜f¯‚È‚Ç‚Ég‚¤
 void CircleWithShading(double radius, POINT3D center, double viewpoint, LIGHT light);
 
