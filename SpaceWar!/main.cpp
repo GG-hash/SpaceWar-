@@ -136,20 +136,7 @@ void Display()
 
 	}//if ((gGame._demoSceen == true) &&(gGame._1P == false) &&(gGame._2P == false))
 
-	//if ((gGame._demoSceen == true) && (gGame.GetCount() % 64 == 4))
-	//{
-	//	vec2 size = vec2(16, 16);
-	//	Color color;
-	//	const char* str = "PRESS ANY KEY";
-	//	float stdWidth = FontGetLength(str);
-
-	//	//文字の点滅
-	//	static unsigned int count = 0;
-
-	//	Text2D(((float)SCREEN_WIDTH - stdWidth) / 2.0f + 320,
-	//		(float)SCREEN_HEIGHT * 5.0f / 8.0f, color.White, size, size.x / 8.0f, str);
-
-	//}//if ((gGame._demoSceen == true) && (gGame.GetCount() % 64 == 4))
+	
 
 	//スコアの描画
 	{
