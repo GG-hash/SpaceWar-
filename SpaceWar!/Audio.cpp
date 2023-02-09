@@ -1,47 +1,47 @@
 #include "Audio.h"
 #include <corecrt_math.h>
 
-////ƒoƒbƒtƒ@[‚ÌID
+////ãƒãƒƒãƒ•ã‚¡ãƒ¼ã®ID
 ALuint buffersID[AUDIO_WAVEFORM_MAX];
-//CHANNELŒ^‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
+//CHANNELå‹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 CHANNEL _channels[AUDIO_CHANNEL_MAX];
 
 int AudioInit()
 {
-	//ƒfƒoƒCƒX‚ğŠJ‚­
+	//ãƒ‡ãƒã‚¤ã‚¹ã‚’é–‹ã
 	ALCdevice* device = alcOpenDevice(NULL); //*devicename
 
-	//NULLƒ`ƒFƒbƒN
+	//NULLãƒã‚§ãƒƒã‚¯
 	if (device == NULL)
 	{
 		return -1;
 	}
 
-	//ƒRƒ“ƒeƒLƒXƒg‚Ìì¬ ó‘Ô‚Ì•Û
+	//ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®ä½œæˆ çŠ¶æ…‹ã®ä¿æŒ
 	ALCcontext* context = alcCreateContext(device, NULL);
 
-	//NULLƒ`ƒFƒbƒN
+	//NULLãƒã‚§ãƒƒã‚¯
 	if (context == NULL)
 	{
 		return -1;
 	}
 
-	//Œ»İ‚ÌƒRƒ“ƒeƒLƒXƒg‚ğİ’è
+	//ç¾åœ¨ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’è¨­å®š
 	alcMakeContextCurrent(context);
 
-	//”gŒ`ƒf[ƒ^‚ğŠÇ—‚·‚éƒoƒbƒtƒ@[‚Ìì¬
-	alGenBuffers(AUDIO_WAVEFORM_MAX, buffersID);//glGenBuffers(ƒoƒbƒtƒ@[‚ğì¬‚·‚é”, ƒoƒbƒtƒ@[‚Ìƒ|ƒCƒ“ƒ^);
+	//æ³¢å½¢ãƒ‡ãƒ¼ã‚¿ã‚’ç®¡ç†ã™ã‚‹ãƒãƒƒãƒ•ã‚¡ãƒ¼ã®ä½œæˆ
+	alGenBuffers(AUDIO_WAVEFORM_MAX, buffersID);//glGenBuffers(ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚’ä½œæˆã™ã‚‹æ•°, ãƒãƒƒãƒ•ã‚¡ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿);
 
 
 	{
-		//ƒoƒbƒtƒ@[‚Éƒf[ƒ^‚ğƒZƒbƒg‚·‚é
-		//‹éŒ`”g‚Ìƒf[ƒ^
+		//ãƒãƒƒãƒ•ã‚¡ãƒ¼ã«ãƒ‡ãƒ¼ã‚¿ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
+		//çŸ©å½¢æ³¢ã®ãƒ‡ãƒ¼ã‚¿
 		unsigned char pulseData[4][8] =
 		{
-			{ 0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00 },//12.5@ƒpƒ‹ƒX”g
-			{ 0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00 },//25.0@ƒpƒ‹ƒX”g
-			{ 0xff,0xff,0xff,0xff,0x00,0x00,0x00,0x00 },//50.0@ƒpƒ‹ƒX”g
-			{ 0xff,0xff,0xff,0xff,0xff,0xff,0x00,0x00 } //75.0@ƒpƒ‹ƒX”g
+			{ 0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00 },//12.5ã€€ãƒ‘ãƒ«ã‚¹æ³¢
+			{ 0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00 },//25.0ã€€ãƒ‘ãƒ«ã‚¹æ³¢
+			{ 0xff,0xff,0xff,0xff,0x00,0x00,0x00,0x00 },//50.0ã€€ãƒ‘ãƒ«ã‚¹æ³¢
+			{ 0xff,0xff,0xff,0xff,0xff,0xff,0x00,0x00 } //75.0ã€€ãƒ‘ãƒ«ã‚¹æ³¢
 
 		};
 
@@ -49,94 +49,94 @@ int AudioInit()
 		{
 			ALsizei size = sizeof pulseData[0];
 
-			alBufferData(buffersID[i], AL_FORMAT_MONO8,//ˆê‚Â‚Ìƒf[ƒ^‚Í8bit
+			alBufferData(buffersID[i], AL_FORMAT_MONO8,//ä¸€ã¤ã®ãƒ‡ãƒ¼ã‚¿ã¯8bit
 				pulseData[i], size,
-				size  //ALsizei freq  440Hz(‰¹ŠK‚ÌŠî€)‚Éİ’è
+				size  //ALsizei freq  440Hz(éŸ³éšã®åŸºæº–)ã«è¨­å®š
 			);
 		}
 	}
 
-	//OŠp”g‚Ì¶¬
+	//ä¸‰è§’æ³¢ã®ç”Ÿæˆ
 	{
-		//32ƒV[ƒPƒ“ƒX‚Ì’Ç‰Á
+		//32ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ã®è¿½åŠ 
 		unsigned char triangleData[32] =
 		{
 			0xff,0xee,0xdd,0xcc,0xbb,0xaa,0x99,0x88,0x77,0x66,0x55,0x44,0x33,0x22,0x11,0x00,
 			0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff
 		};
 
-		alBufferData(buffersID[AUDIO_WAVEFORM_TRIANGLE], AL_FORMAT_MONO8,//ˆê‚Â‚Ìƒf[ƒ^‚Í8bit
+		alBufferData(buffersID[AUDIO_WAVEFORM_TRIANGLE], AL_FORMAT_MONO8,//ä¸€ã¤ã®ãƒ‡ãƒ¼ã‚¿ã¯8bit
 			triangleData, sizeof triangleData,
-			sizeof triangleData  //ALsizei freq  440Hz(‰¹ŠK‚ÌŠî€)‚Éİ’è
+			sizeof triangleData  //ALsizei freq  440Hz(éŸ³éšã®åŸºæº–)ã«è¨­å®š
 		);
 	}
 
-	//’·üŠúƒmƒCƒY‚Ì”gŒ`ƒf[ƒ^‚Ì¶¬
+	//é•·å‘¨æœŸãƒã‚¤ã‚ºã®æ³¢å½¢ãƒ‡ãƒ¼ã‚¿ã®ç”Ÿæˆ
 	{
-		//’·üŠú
+		//é•·å‘¨æœŸ
 		const int length = 32767;
 		unsigned char longnoiseData[length] = {};
-		//‹^——”‚Ì¶¬//////////////////////
-		//ƒVƒtƒgƒŒƒWƒXƒ^‚ğ¶¬‚·‚é
+		//ç–‘ä¼¼ä¹±æ•°ã®ç”Ÿæˆ//////////////////////
+		//ã‚·ãƒ•ãƒˆãƒ¬ã‚¸ã‚¹ã‚¿ã‚’ç”Ÿæˆã™ã‚‹
 		int shiftReg = 1 << 14;
 
-		//ƒf[ƒ^‚Ì‘‚«‚İ
+		//ãƒ‡ãƒ¼ã‚¿ã®æ›¸ãè¾¼ã¿
 		for (int i = 0; i < length; i++)
 		{
-			//Œ‹‰Ê‚ğ‹‚ß‚é
-			int result = (shiftReg ^ (shiftReg >> 1)) & 1;//ƒVƒtƒg‚µ‚Ä1Œ…–Ú‚ğó‚¯æ‚é
-			//ƒŒƒWƒXƒ^‚ğ‰EƒVƒtƒg‚·‚é
+			//çµæœã‚’æ±‚ã‚ã‚‹
+			int result = (shiftReg ^ (shiftReg >> 1)) & 1;//ã‚·ãƒ•ãƒˆã—ã¦1æ¡ç›®ã‚’å—ã‘å–ã‚‹
+			//ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’å³ã‚·ãƒ•ãƒˆã™ã‚‹
 			shiftReg >>= 1;
 			shiftReg |= result << 14;//OR
 			longnoiseData[i] = 0xff * result;
 		}
 		////////////////////////////////////
 
-		alBufferData(buffersID[AUDIO_WAVEFORM_NOISE_LONG], AL_FORMAT_MONO8,//ˆê‚Â‚Ìƒf[ƒ^‚Í8bit
+		alBufferData(buffersID[AUDIO_WAVEFORM_NOISE_LONG], AL_FORMAT_MONO8,//ä¸€ã¤ã®ãƒ‡ãƒ¼ã‚¿ã¯8bit
 			longnoiseData, sizeof longnoiseData,
-			1//sizeof longnoiseData  //ALsizei freq  440Hz(‰¹ŠK‚ÌŠî€)‚Éİ’è
+			1//sizeof longnoiseData  //ALsizei freq  440Hz(éŸ³éšã®åŸºæº–)ã«è¨­å®š
 		);
 	}
 
-	//’ZüŠúƒmƒCƒY‚Ì”gŒ`ƒf[ƒ^‚Ì¶¬
+	//çŸ­å‘¨æœŸãƒã‚¤ã‚ºã®æ³¢å½¢ãƒ‡ãƒ¼ã‚¿ã®ç”Ÿæˆ
 	{
-		//’ZüŠú
+		//çŸ­å‘¨æœŸ
 		const int length = 93;
 		unsigned char shortnoiseData[length] = {};
 
-		//‹^——”‚Ì¶¬//////////////////////
-		//ƒVƒtƒgƒŒƒWƒXƒ^‚ğ¶¬‚·‚é
+		//ç–‘ä¼¼ä¹±æ•°ã®ç”Ÿæˆ//////////////////////
+		//ã‚·ãƒ•ãƒˆãƒ¬ã‚¸ã‚¹ã‚¿ã‚’ç”Ÿæˆã™ã‚‹
 		int shiftReg = 1 << 14;
-		//ƒf[ƒ^‚Ì‘‚«‚İ
+		//ãƒ‡ãƒ¼ã‚¿ã®æ›¸ãè¾¼ã¿
 		for (int i = 0; i < length; i++)
 		{
-			//Œ‹‰Ê‚ğ‹‚ß‚é
-			int result = (shiftReg ^ (shiftReg >> 6)) & 1;//ƒVƒtƒg‚µ‚Ä1Œ…–Ú‚ğó‚¯æ‚é
-			//ƒŒƒWƒXƒ^‚ğ‰EƒVƒtƒg‚·‚é
+			//çµæœã‚’æ±‚ã‚ã‚‹
+			int result = (shiftReg ^ (shiftReg >> 6)) & 1;//ã‚·ãƒ•ãƒˆã—ã¦1æ¡ç›®ã‚’å—ã‘å–ã‚‹
+			//ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’å³ã‚·ãƒ•ãƒˆã™ã‚‹
 			shiftReg >>= 1;
 			shiftReg |= result << 14;//OR
 			shortnoiseData[i] = 0xff * result;
 		}
 		/////////////////////////////////////
-		alBufferData(buffersID[AUDIO_WAVEFORM_NOISE_SHORT], AL_FORMAT_MONO8,//ˆê‚Â‚Ìƒf[ƒ^‚Í8bit
+		alBufferData(buffersID[AUDIO_WAVEFORM_NOISE_SHORT], AL_FORMAT_MONO8,//ä¸€ã¤ã®ãƒ‡ãƒ¼ã‚¿ã¯8bit
 			shortnoiseData, sizeof shortnoiseData,
-			1  //ALsizei freq  440Hz(‰¹ŠK‚ÌŠî€)‚Éİ’è
+			1  //ALsizei freq  440Hz(éŸ³éšã®åŸºæº–)ã«è¨­å®š
 		);
 	}
 
-	//ƒ\[ƒX‚ÌID
+	//ã‚½ãƒ¼ã‚¹ã®ID
 	//ALuint sourceID;
 
-	//ƒ`ƒƒƒ“ƒlƒ‹‚Ì‰Šú‰»
+	//ãƒãƒ£ãƒ³ãƒãƒ«ã®åˆæœŸåŒ–
 	for (int i = 0; i < AUDIO_CHANNEL_MAX; i++)
 	{
-		//ƒ\[ƒX‚Ìì¬
+		//ã‚½ãƒ¼ã‚¹ã®ä½œæˆ
 		alGenSources(1, &_channels[i].sourceID);
 
-		//ƒQƒCƒ“‚Ì‰Šú‰»
+		//ã‚²ã‚¤ãƒ³ã®åˆæœŸåŒ–
 		AudioGain(i, AUDIO_DEFAULT_GAIN);
 
-		//ƒ‹[ƒv‚³‚¹‚é
+		//ãƒ«ãƒ¼ãƒ—ã•ã›ã‚‹
 		alSourcei(_channels[i].sourceID, AL_LOOPING, AL_TRUE);
 	}
 
@@ -157,7 +157,7 @@ int AudioInit()
 void AudioWaveForm(int channel, int waveform)
 {
 	_channels[channel]._waveform = waveform;
-	//ƒ\[ƒX‚Éƒoƒbƒtƒ@[‚ğƒZƒbƒg‚·‚é intŒ^
+	//ã‚½ãƒ¼ã‚¹ã«ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ intå‹
 	alSourcei(_channels[channel].sourceID, AL_BUFFER, buffersID[_channels[channel]._waveform]);
 }//void AudioWaveForm(int channel, int waveform)
 
@@ -170,27 +170,27 @@ void AudioLength(int channel, unsigned int milis)
 
 void AudioUpdate()
 {
-	//‘S‚Ä‚Ìƒ`ƒƒƒ“ƒlƒ‹‚ğƒAƒbƒvƒf[ƒg
+	//å…¨ã¦ã®ãƒãƒ£ãƒ³ãƒãƒ«ã‚’ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
 	for (int i = 0; i < AUDIO_CHANNEL_MAX; i++)
 	{
-		//‰¹‚Ì’·‚³(_length)‚ª0‚æ‚è‘å‚«‚­AÄ¶ŠÔ‚ğƒI[ƒo[‚µ‚½‚ç‰¹‚ğ~‚ß‚é
+		//éŸ³ã®é•·ã•(_length)ãŒ0ã‚ˆã‚Šå¤§ããã€å†ç”Ÿæ™‚é–“ã‚’ã‚ªãƒ¼ãƒãƒ¼ã—ãŸã‚‰éŸ³ã‚’æ­¢ã‚ã‚‹
 		if ((_channels[i]._length > 0) && (clock() - _channels[i]._startTime >= _channels[i]._length))
 		{
 			AudioStop(i);
 		}
 
-		//‰¹‚ÌŒ¸Š‚ª‚ ‚é‚©‚ğƒ`ƒFƒbƒN
+		//éŸ³ã®æ¸›è¡°ãŒã‚ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯
 		if ((_channels[i]._decay != 0) && (_channels[i]._decay < 1))
 		{
-			//Œ¸Š‚³‚¹‚é
+			//æ¸›è¡°ã•ã›ã‚‹
 			_channels[i]._gain *= _channels[i]._decay;
 
 
-			//‰¹—Ê‚ğ’²ß‚·‚é floatŒ^
+			//éŸ³é‡ã‚’èª¿ç¯€ã™ã‚‹ floatå‹
 			alSourcef(_channels[i].sourceID, AL_GAIN, _channels[i]._gain);
 		}
 
-		//_sweep‚ªƒZƒbƒg‚³‚ê‚Ä‚¢‚é‚©ƒ`ƒFƒbƒN
+		//_sweepãŒã‚»ãƒƒãƒˆã•ã‚Œã¦ã„ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
 		if (_channels[i]._sweep != 0)
 		{
 			_channels[i]._freq *= _channels[i]._sweep;
@@ -205,15 +205,15 @@ void AudioUpdate()
 
 			}
 
-			//ƒsƒbƒ`‚ğİ’è‚·‚é floatŒ^
+			//ãƒ”ãƒƒãƒã‚’è¨­å®šã™ã‚‹ floatå‹
 			alSourcef(_channels[i].sourceID, AL_PITCH, _channels[i]._freq);
 		}//if (_channels[i]._sweep != 0)
 	}//for (int i = 0; i < AUDIO_CHANNEL_MAX; i++)
 
 
-	//ƒGƒ‰[‘Îô
+	//ã‚¨ãƒ©ãƒ¼å¯¾ç­–
 	ALenum error = alGetError();
-	//ƒGƒ‰[‚ª‚ ‚Á‚½ê‡
+	//ã‚¨ãƒ©ãƒ¼ãŒã‚ã£ãŸå ´åˆ
 	if (error != AL_NO_ERROR)
 	{
 		printf("%s\n", alGetString(error));
@@ -237,38 +237,22 @@ void AudioSweep(int channel, float sweep, float freqEnd)
 }
 //AudioSweep(int channel, float sweep, float freqEnd)
 
-//void AudioPitchTartget(float pitchTarget)
-//{
-//	_pitchTarget = pitchTarget;
-//}//AudioPitchTartget(float pitchTarget)
+
 
 void AudioFreq(int channel, float freq)
 {
 	_channels[channel]._freqStart = _channels[channel]._freq = freq;
-	//ƒsƒbƒ`‚ğİ’è‚·‚é floatŒ^
-	//Ä¶’†‚Å‚àƒsƒbƒ`‚ğ•ÏX‚Å‚«‚é‚æ‚¤‚É‚·‚é
+	//ãƒ”ãƒƒãƒã‚’è¨­å®šã™ã‚‹ floatå‹
+	//å†ç”Ÿä¸­ã§ã‚‚ãƒ”ãƒƒãƒã‚’å¤‰æ›´ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
 	alSourcef(_channels[channel].sourceID, AL_PITCH, _channels[channel]._freq);
 }
 //AudioFreq(int channel, float freq)
 
-//void SoundTest(unsigned char key)
-//{
-//	if ((key >= '0') && (key <= '9'))
-//	{
-//		AudioStop();
-//		//•¶š‚ğ”’l‚Ö•ÏŠ·
-//		int tmpKey = key - '0';
-//		AudioWaveForm(AUDIO_WAVEFORM_PULSE_50);
-//		AudioFreq(440 * powf(2, 1 + (tmpKey / 12.0f)));
-//		AudioPlay();
-//	}
-//}
-//SoundTest(unsigned char key)
 
 
 float AudioIndexToFreq(int index)
 {
-	//œ”‚Ì•\
+	//é™¤æ•°ã®è¡¨
 	/*int divisorTable[] =
 	{
 		4,8,16,32,64,96,128,160,202,254,380,508,762,1016,2034,4068
@@ -280,7 +264,7 @@ float AudioIndexToFreq(int index)
 	};
 
 	
-	//1789772.5f ‚Íƒtƒ@ƒ~ƒRƒ“‚ÌCPUƒNƒƒbƒNü”g”
+	//1789772.5f ã¯ãƒ•ã‚¡ãƒŸã‚³ãƒ³ã®CPUã‚¯ãƒ­ãƒƒã‚¯å‘¨æ³¢æ•°
 	return 1789772.5f / divisorTable[index];
 }//AudioIndexToFreq(int index)
 
@@ -288,7 +272,7 @@ void AudioGain(int channel, float gain)
 {
 	_channels[channel]._gain = _channels[channel]._startGain = gain;
 
-	//‰¹—Ê‚ğ’²ß‚·‚é floatŒ^
+	//éŸ³é‡ã‚’èª¿ç¯€ã™ã‚‹ floatå‹
 	alSourcef(_channels[channel].sourceID, AL_GAIN, _channels[channel]._gain);
 
 
@@ -297,19 +281,19 @@ void AudioGain(int channel, float gain)
 void AudioPlay(int channel)
 {
 	_channels[channel]._gain = _channels[channel]._startGain;
-	//‰¹—Ê‚ğ’²ß‚·‚é floatŒ^
+	//éŸ³é‡ã‚’èª¿ç¯€ã™ã‚‹ floatå‹
 	alSourcef(_channels[channel].sourceID, AL_GAIN, _channels[channel]._gain);
 
 	_channels[channel]._freq = _channels[channel]._freqStart;
 	//printf("StartFreq : %f\n", _freq);
 	//_pitch = _freqStart/DEFAULT_FREQ;
-	//ƒsƒbƒ`‚ğİ’è‚·‚é floatŒ^
+	//ãƒ”ãƒƒãƒã‚’è¨­å®šã™ã‚‹ floatå‹
 	alSourcef(_channels[channel].sourceID, AL_PITCH, _channels[channel]._freq);
 
 
 	alSourcePlay(_channels[channel].sourceID);
 
-	//ƒXƒ^[ƒg‚Ì‚ğ•Û‘¶‚·‚é
+	//ã‚¹ã‚¿ãƒ¼ãƒˆã®æ™‚åˆ»ã‚’ä¿å­˜ã™ã‚‹
 	_channels[channel]._startTime = clock();
 }//AudioPlay(int channel)
 
