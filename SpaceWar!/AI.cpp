@@ -32,6 +32,9 @@ void AI::Update()
 	vec2 toEnemyPosVec = enemy.GetPosition() - ship.GetPosition();
 	_toEnemyAngle = -atan2(toEnemyPosVec.x, toEnemyPosVec.y);
 
+	//printf("_toEnemyAngle : %f\n", _toEnemyAngle * 180.0f/M_PI);
+	//printf("atan2 Angle   : %f\n", atan2(toEnemyPosVec.y, toEnemyPosVec.x));
+
 	//惑星への角度、つまり惑星からの角度と真反対となる
 	_toPlanetAngle = FixRadianAngle(_fromPlanetAngle + (float)M_PI);
 	//惑星の位置
@@ -41,23 +44,23 @@ void AI::Update()
 	//自分の向いている方向から90°足した方向を目標にする。
 	float avoidPlanetRotate = _fromPlanetAngle + (float)M_PI / 2.0f;
 	
-	bool flag = false;
+
 
 	//自分自身から惑星への角度と敵への角度が0.5rad (ほぼ対角線)なら
 	//惑星を避ける
 	if ((enemy._isDead == false) && (fabs(_toPlanetAngle - _toEnemyAngle) < 0.5f))
 	{
-		flag = true;
+
 		//惑星を避けるように進む
-		float screenRadius = (float)SCREEN_HEIGHT / 2.0f;
 		float distance = sqrtf(powf(ship.GetPosition().x - planetPos.x,2.0f) + powf(ship.GetPosition().y - planetPos.y,2.0f));
 		//極座標から直交座標を求め、惑星を中心として90°先の位置を求める
-		_enemyPos = vec2(-sin(avoidPlanetRotate), cos(avoidPlanetRotate)) * distance;
+		_targetPos = vec2(-sin(avoidPlanetRotate), cos(avoidPlanetRotate)) * distance;
 
 
 		//スクリーンの高さの半径の70%離れた位置で旋回する
+		//float screenRadius = (float)SCREEN_HEIGHT / 2.0f;
 		//_enemyPos = vec2(-sin(avoidPlanetRotate), cos(avoidPlanetRotate)) * screenRadius * 0.7f;
-
+		
 	}//if (fabs(_toPlanetAngle - _toEnemyAngle) < 0.5f)
 	//対角線上に惑星が無ければ敵へ向かう
 	else
@@ -67,18 +70,21 @@ void AI::Update()
 		{
 			//攻撃開始
 			attack = true;
-			_enemyPos = enemy.GetPosition();
+			_targetPos = enemy.GetPosition();
 		}
 
 	}//else
 
-	//敵への方向を求める
-	vec2 toEnemyNewPosVec = _enemyPos - ship.GetPosition();
-	_toShipAngle = -atan2(toEnemyNewPosVec.x, toEnemyNewPosVec.y);
+	//目的とする方向を求める
+	vec2 toTarget = _targetPos - ship.GetPosition();
+	_toShipAngle = -atan2(toTarget.x, toTarget.y);
+
+	
 	//プレイヤーの向いている方向を基準とした、敵の相対的な方向を求める
 	_toRelativeEnemyAngle = _toShipAngle - ship.GetRotate();
 	//回転の範囲を -M_PI < _rotate < M_PI とする
 	_toRelativeEnemyAngle = FixRadianAngle(_toRelativeEnemyAngle);
+	
 
 	//敵機が自機から見て右の位置にいる時の処理
 	if (_toRelativeEnemyAngle < 0.0f)

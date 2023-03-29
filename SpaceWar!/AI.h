@@ -6,8 +6,8 @@ using namespace glm;
 class AI : public Actor
 {
 private:
-	//敵の位置
-	vec2 _enemyPos;
+	//ターゲットの位置
+	vec2 _targetPos;
 	//Shipのインデックス
 	int _shipIndex;
 	//プレイヤーの方向
@@ -30,8 +30,8 @@ public:
 	void Update() override;
 	//描画する関数
 	void Draw() override;
-	//敵の位置のゲッタ
-	vec2& GetEnemyPosition() { return _enemyPos; }
+	//ターゲットの位置のゲッタ
+	vec2& GetTargetPosition() { return _targetPos; }
 };//class AI : public Actor
 
 
