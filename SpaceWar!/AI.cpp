@@ -21,6 +21,8 @@ void AI::Update()
 	Ship& enemy = gShips[(_shipIndex + 1) % 2];
 	bool* keys = ship._keys;
 	bool* lastKeys = ship._lastKeys;
+	//攻撃するか判定するフラグ
+	bool attack = false;
 	
 	//キーをクリアする
 	memset(keys, 0, sizeof(keys));
@@ -30,29 +32,32 @@ void AI::Update()
 	vec2 toEnemyPosVec = enemy.GetPosition() - ship.GetPosition();
 	_toEnemyAngle = -atan2(toEnemyPosVec.x, toEnemyPosVec.y);
 
-	//惑星からの角度を求める
-	vec2 planetPos = vec2(0.0f, 0.0f);
-	//船の先端と惑星の角度を求める
-	_fromPlanetAngle = -atan2(ship.GetPosition().x - planetPos.x, ship.GetPosition().y - planetPos.y);
 	//惑星への角度、つまり惑星からの角度と真反対となる
 	_toPlanetAngle = FixRadianAngle(_fromPlanetAngle + (float)M_PI);
-	
-	//自分の向いている方向から90°足したところを目標にする。
+	//惑星の位置
+	vec2 planetPos = vec2(0.0f, 0.0f);
+	//惑星を基準とした惑星からの角度を求める
+	_fromPlanetAngle = -atan2(ship.GetPosition().x - planetPos.x, ship.GetPosition().y - planetPos.y);
+	//自分の向いている方向から90°足した方向を目標にする。
 	float avoidPlanetRotate = _fromPlanetAngle + (float)M_PI / 2.0f;
 	
-	//攻撃するか判定するフラグ
-	bool attack = false;
+	bool flag = false;
 
 	//自分自身から惑星への角度と敵への角度が0.5rad (ほぼ対角線)なら
 	//惑星を避ける
 	if ((enemy._isDead == false) && (fabs(_toPlanetAngle - _toEnemyAngle) < 0.5f))
 	{
+		flag = true;
 		//惑星を避けるように進む
 		float screenRadius = (float)SCREEN_HEIGHT / 2.0f;
+		float distance = sqrtf(powf(ship.GetPosition().x - planetPos.x,2.0f) + powf(ship.GetPosition().y - planetPos.y,2.0f));
+		//極座標から直交座標を求め、惑星を中心として90°先の位置を求める
+		_enemyPos = vec2(-sin(avoidPlanetRotate), cos(avoidPlanetRotate)) * distance;
+
+
 		//スクリーンの高さの半径の70%離れた位置で旋回する
-		//極座標から直交座標を求める
-		//これにより、角度の情報だけで移動できる
-		_enemyPos = vec2(-sin(avoidPlanetRotate), cos(avoidPlanetRotate)) * screenRadius * 0.7f;
+		//_enemyPos = vec2(-sin(avoidPlanetRotate), cos(avoidPlanetRotate)) * screenRadius * 0.7f;
+
 	}//if (fabs(_toPlanetAngle - _toEnemyAngle) < 0.5f)
 	//対角線上に惑星が無ければ敵へ向かう
 	else
@@ -70,7 +75,7 @@ void AI::Update()
 	//敵への方向を求める
 	vec2 toEnemyNewPosVec = _enemyPos - ship.GetPosition();
 	_toShipAngle = -atan2(toEnemyNewPosVec.x, toEnemyNewPosVec.y);
-	//敵の相対的な方向を求める
+	//プレイヤーの向いている方向を基準とした、敵の相対的な方向を求める
 	_toRelativeEnemyAngle = _toShipAngle - ship.GetRotate();
 	//回転の範囲を -M_PI < _rotate < M_PI とする
 	_toRelativeEnemyAngle = FixRadianAngle(_toRelativeEnemyAngle);
@@ -79,6 +84,7 @@ void AI::Update()
 	if (_toRelativeEnemyAngle < 0.0f)
 	{
 		keys[SHIP_KEY_RIGHT] = true;
+		
 	}//if (_toRelativeEnemyAngle < 0.0f)
 	//敵機が自機から見て左の位置にいる時の処理
 	else if (_toRelativeEnemyAngle > 0.0f)
@@ -86,6 +92,8 @@ void AI::Update()
 		keys[SHIP_KEY_LEFT] = true;
 	}//else if (_toRelativeEnemyAngle > 0.0f)
 
+
+	//State Accel
 	//敵の相対位置と自分の向いている方向がほぼ一致したら、
 	//加速して敵の方へ向かう
 	if (fabs(FixRadianAngle(_toShipAngle - ship.GetRotate())) < 0.5f)
@@ -93,6 +101,7 @@ void AI::Update()
 		keys[SHIP_KEY_ACCEL] = true;
 	}//if (fabs(FixRadianAngle(_toRelativeEnemyAngle - ship.GetRotate())) < 0.5f)
 
+	//State Attack
 	if ((attack == true) &&                            //attackのフラグがtrue
 		(fabs(_toRelativeEnemyAngle) < 0.5f) &&        //敵機の方向に向いている
 		(length(toEnemyPosVec) < SCREEN_WIDTH / 2.0f) &&  //敵との距離がスクリーンの幅の1/2
