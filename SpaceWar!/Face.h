@@ -200,5 +200,6 @@ void DrawFace(FACE face, float r, float g, float b);
 //背景の惑星などに使う
 void CircleWithShading(double radius, POINT3D center, double viewpoint, LIGHT light);
 
+//テクスチャマッピングができる球のモデルを描画する関数
 void mySolidSphere(float radius, int slices, int stacks);
 
